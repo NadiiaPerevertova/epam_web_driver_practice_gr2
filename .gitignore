@@ -9,3 +9,5 @@ buildNumber.properties
 .mvn/timing.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
+/src/test/resources/webdriver/chromedriver
+src/test/java/org/example/automation/amazon/BaseWebDriverTest.java
