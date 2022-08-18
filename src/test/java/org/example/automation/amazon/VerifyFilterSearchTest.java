@@ -45,17 +45,16 @@ public class VerifyFilterSearchTest extends BaseWebDriverTest{
 
         By result = By.xpath("//a/span[@class='a-price']/span[@class='a-offscreen']");
         List<WebElement> myElements = webDriver.findElements(result);
-//        int check=0;
+        int check=0;
         for(WebElement e : myElements) {
-            System.out.println(e.getAttribute("innerHTML"));
-
-//            if (!e.getText().contains("Apple")){
-//                check++;
-//            }
+            String num = e.getAttribute("innerHTML");
+            double numprice=Double.parseDouble(num.replaceAll("[^0-9]", ""))/100;
+            System.out.println(num+"=>"+numprice);
+            if(numprice<25||numprice>50){
+                check++;
+            }
         }
-
-        //Assert.assertEquals( check,0);
-
+        Assert.assertEquals( check,0);
     }
 
     @Test
@@ -65,20 +64,17 @@ public class VerifyFilterSearchTest extends BaseWebDriverTest{
         WebElement category= webDriver.findElement(By.xpath("//a[@aria-label='Computers & Accessories']"));
         category.click();
 
-        WebElement brand= webDriver.findElement(By.xpath("//a/span[.='Apple']"));
-        brand.click();
+        WebElement price= webDriver.findElement(By.xpath("//li[@aria-labelledby=\"s-result-sort-select_2\"]/a[.=\"Price: High to Low\"]"));
+        price.click();
 
-        By result = By.xpath("//span[@class='a-size-base-plus a-color-base a-text-normal']");
+        By result = By.xpath("//a/span[@class='a-price']/span[@class='a-offscreen']");
         List<WebElement> myElements = webDriver.findElements(result);
         int check=0;
         for(WebElement e : myElements) {
-            System.out.println(e.getText());
-            if (!e.getText().contains("Apple")){
-                check++;
-            }
+            String num = e.getAttribute("innerHTML");
+            double numprice=Double.parseDouble(num.replaceAll("[^0-9]", ""))/100;
+            System.out.println(num+"=>"+numprice);
         }
-
         Assert.assertEquals( check,0);
-
     }
 }
