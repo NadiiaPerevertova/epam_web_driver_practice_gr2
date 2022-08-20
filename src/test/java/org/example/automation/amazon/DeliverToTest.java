@@ -11,9 +11,11 @@ import java.time.Duration;
 
 public class DeliverToTest extends BaseWebDriverTest {
 
-    @Test
-    public void deliveryLocationChanging() {
-        webDriver.get("https://www.amazon.com");
+    public static final String AMAZON_COM = "https://www.amazon.com";
+
+    @Test(description = "The test checks shipping changes by US state zip codes.")
+    public void verifyDeliveryLocationChanging() {
+        webDriver.get(AMAZON_COM);
 
         WebElement deliverIcon = webDriver.findElement(By.id("nav-global-location-data-modal-action"));
         deliverIcon.click();
@@ -35,9 +37,9 @@ public class DeliverToTest extends BaseWebDriverTest {
         Assert.assertTrue(isTrueDeliver, "Not updated, expected: Sacramento 95814");
     }
 
-    @Test
-    public void isCountryPresent() {
-        webDriver.get("https://www.amazon.com");
+    @Test(description = "The test checks that in the list of countries Poland is present")
+    public void verifyCountryPresent() {
+        webDriver.get(AMAZON_COM);
 
         WebElement deliverIcon = webDriver.findElement(By.id("nav-global-location-data-modal-action"));
         deliverIcon.click();
@@ -49,12 +51,11 @@ public class DeliverToTest extends BaseWebDriverTest {
         boolean isPolandPresent = new WebDriverWait(webDriver, Duration.ofSeconds(20))
                 .until(ExpectedConditions.textToBe(By.id("GLUXCountryList_178"), "Poland"));
         Assert.assertTrue(isPolandPresent, "Not found Poland");
-
     }
 
-    @Test
-    public void deliveryOfSelectedProduct() {
-        webDriver.get("https://www.amazon.com");
+    @Test(description = "The test checks that changed delivery location is reflected in selected product.")
+    public void verifyDeliveryOfSelectedProduct() {
+        webDriver.get(AMAZON_COM);
 
         WebElement deliverIcon = webDriver.findElement(By.id("nav-global-location-data-modal-action"));
         deliverIcon.click();
@@ -85,6 +86,5 @@ public class DeliverToTest extends BaseWebDriverTest {
         boolean isAustraliaDeliveryPresent = new WebDriverWait(webDriver, Duration.ofSeconds(20))
                 .until(ExpectedConditions.textToBe(By.id("contextualIngressPtLabel_deliveryShortLine"), "Deliver to Australia"));
         Assert.assertTrue(isAustraliaDeliveryPresent, "Not found 'Deliver to Australia'");
-
     }
 }
