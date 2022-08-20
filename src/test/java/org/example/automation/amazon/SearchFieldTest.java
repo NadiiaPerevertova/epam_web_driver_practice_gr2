@@ -10,6 +10,8 @@ public class SearchFieldTest extends BaseWebDriverTest {
 
     public static final String INCORRECT_INPUT = "890770hhbhb767879zdrjh444:::";
 
+    public static final String PRESENT = "ipad";
+
     @FindBy(css = ".nav-search-field input")
     private WebElement searchField;
 
@@ -19,6 +21,9 @@ public class SearchFieldTest extends BaseWebDriverTest {
     //890770hhbhb767879zdrjh444:::
     @FindBy(xpath = "//div[@tabindex = 0]/div[@class='a-row']")
     private WebElement searchResult;
+
+    @FindBy(xpath = "//span[@class =\"a-color-state a-text-bold\"]")
+    private WebElement searchResultPresent;
 
     @Test
     public void noResultsForIncorrectInformationTest() {
@@ -36,7 +41,29 @@ public class SearchFieldTest extends BaseWebDriverTest {
         String expectedResult = "No results for " + INCORRECT_INPUT + ".";
 
         Assert.assertEquals(actualResult, expectedResult);
+
     }
 
+    @Test
+    public void checkResultsForPresentTest() {
 
+        PageFactory.initElements(webDriver, this);
+        webDriver.get("https://www.amazon.com");
+
+        searchField.sendKeys(PRESENT);
+
+
+        searchButton.click();
+
+        String actualResult = searchResultPresent.getText();
+
+        String expectedResult = "\"" + PRESENT + "\"";
+
+        Assert.assertEquals(actualResult, expectedResult);
+
+    }
 }
+
+
+
+
