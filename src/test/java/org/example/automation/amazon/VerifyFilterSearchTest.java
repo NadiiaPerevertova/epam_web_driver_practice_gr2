@@ -14,14 +14,17 @@ import java.util.List;
 
 public class VerifyFilterSearchTest extends BaseWebDriverTest{
     public static final String WEB_ADDRESS="https://www.amazon.com";
-    public static final String BRAND="Apple";
+    public static final String BRAND_APPLE="Apple";
+    public static final String BRAND_ROKU="Roku";
 
     @FindBy(xpath = "//a[@aria-label='Computers & Accessories']")
     private WebElement filterCategory;
 
-    @FindBy(xpath = "//div[@class='a-section a-spacing-none']/descendant::span[.='Apple']")
+    @FindBy(xpath = "//div[@class='a-section a-spacing-none']/descendant::span[.='"+BRAND_APPLE+"']")
     private WebElement filterBrand;
 
+    @FindBy(xpath = "//div[@class='a-section a-spacing-none']/descendant::span[.='"+BRAND_ROKU+"']")
+    private WebElement filterBrandRoku;
     @FindBy(xpath = "//a/span[.='$25 to $50']")
     private WebElement filterPrice;
     @FindAll({@FindBy(xpath = "//div[@class='s-main-slot s-result-list s-search-results sg-row']/descendant::span[@class='a-size-base-plus a-color-base a-text-normal']")})
@@ -40,6 +43,7 @@ public class VerifyFilterSearchTest extends BaseWebDriverTest{
     public void setup() {
         PageFactory.initElements(webDriver, this);
         webDriver.get("https://www.amazon.com");
+
         filterCategory.click();
     }
 
@@ -50,15 +54,31 @@ public class VerifyFilterSearchTest extends BaseWebDriverTest{
         int check=0;
         for(WebElement e : productTitleList) {
             System.out.println(e.getText());
-            if (!e.getText().contains(BRAND)){
+            if (!e.getText().contains(BRAND_APPLE)){
                check++;
             }
         }
         Assert.assertEquals( check,0);
     }
 
+    @Test (description = "test case to check if multiple brand category filter working properly")
+    public void verifyMultipleBrandCategory() {
+        filterBrand.click();
+        filterBrandRoku.click();
+        boolean check= true;
+        for(WebElement e : productTitleList) {
+            System.out.println(e.getText());
+            if (e.getText().contains(BRAND_APPLE)||e.getText().contains(BRAND_ROKU)){
 
-    @Test(description = "test case to check if price are inside the described range($25-$50)"+
+            } else{
+                check=false;
+                break;
+            }
+        }
+        Assert.assertTrue( check);
+    }
+
+    @Test(description = "positive test case to check if price are inside the described range($25-$50)"+
     "reminder the result will be failed because it's bug from amazon side( already notify Yuliia about it)")
     public void verifyPriceRangeCategoryby() {
         filterPrice.click();
@@ -76,7 +96,7 @@ public class VerifyFilterSearchTest extends BaseWebDriverTest{
         Assert.assertTrue(inRange);
     }
 
-    @Test(description = "test case to check if price are sorted in a described setting(High to Low) in this case"+
+    @Test(description = "positive test case to check if price are sorted in a described setting(High to Low) in this case"+
     "reminder the result will be failed because it's bug from amazon side")
     public void verifySorting() {
         filterPrice.click();
