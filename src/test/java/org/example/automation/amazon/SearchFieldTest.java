@@ -73,7 +73,9 @@ public class SearchFieldTest extends BaseWebDriverTest {
 
         for (WebElement element : searchResultList) {
             if (element.getText().contains(TEXT)) {
+
                 result = true;
+                break;
             }
         }
         Assert.assertTrue(result);
