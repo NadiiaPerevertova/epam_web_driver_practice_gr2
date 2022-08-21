@@ -42,7 +42,7 @@ public class VerifyFilterSearchTest extends BaseWebDriverTest{
     @BeforeMethod
     public void setup() {
         PageFactory.initElements(webDriver, this);
-        webDriver.get("https://www.amazon.com");
+        webDriver.get(WEB_ADDRESS);
 
         filterCategory.click();
     }
