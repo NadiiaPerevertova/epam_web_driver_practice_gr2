@@ -2,90 +2,93 @@ package org.example.automation.amazon;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindAll;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class VerifyFilterSearchTest extends BaseWebDriverTest{
-    @Test
-    public void verifyBrandCategory() {
-        // test case to check if products shown has Apple word inside to pove that the brand category filter working properly
+    public static final String WEB_ADDRESS="https://www.amazon.com";
+    public static final String BRAND="Apple";
+
+    @FindBy(xpath = "//a[@aria-label='Computers & Accessories']")
+    private WebElement filterCategory;
+
+    @FindBy(xpath = "//div[@class='a-section a-spacing-none']/descendant::span[.='Apple']")
+    private WebElement filterBrand;
+
+    @FindBy(xpath = "//a/span[.='$25 to $50']")
+    private WebElement filterPrice;
+    @FindAll({@FindBy(xpath = "//div[@class='s-main-slot s-result-list s-search-results sg-row']/descendant::span[@class='a-size-base-plus a-color-base a-text-normal']")})
+    public List<WebElement> productTitleList;
+
+    @FindAll({@FindBy(xpath = "//div[@class='s-main-slot s-result-list s-search-results sg-row']/descendant::a/span[@class='a-price']/span[@class='a-offscreen']")})
+    public List<WebElement> productPriceList;
+
+    @FindBy(xpath = "//span[@aria-label='Sort by:']/descendant::span[.='Featured']")
+    public WebElement sortFeatured;
+
+    @FindBy(xpath = "//li[@aria-labelledby='s-result-sort-select_2']/a[.='Price: High to Low']")
+    public WebElement sortHighToLow;
+
+    @BeforeMethod
+    public void setup() {
+        PageFactory.initElements(webDriver, this);
         webDriver.get("https://www.amazon.com");
+        filterCategory.click();
+    }
 
-        WebElement category= webDriver.findElement(By.xpath("//a[@aria-label='Computers & Accessories']"));
-        category.click();
-
-        WebElement brand= webDriver.findElement(By.xpath("//a/span[.='Apple']"));
-        brand.click();
-
-        By result = By.xpath("//span[@class='a-size-base-plus a-color-base a-text-normal']");
-        List<WebElement> myElements = webDriver.findElements(result);
+    @Test (description = "test case to check if products shown has Apple word inside to " +
+            "prove that the brand category filter working properly")
+    public void verifyBrandCategory() {
+        filterBrand.click();
         int check=0;
-        for(WebElement e : myElements) {
+        for(WebElement e : productTitleList) {
             System.out.println(e.getText());
-            if (!e.getText().contains("Apple")){
+            if (!e.getText().contains(BRAND)){
                check++;
             }
         }
-
         Assert.assertEquals( check,0);
-
     }
 
 
-    @Test
+    @Test(description = "test case to check if price are inside the described range($25-$50)"+
+    "reminder the result will be failed because it's bug from amazon side( already notify Yuliia about it)")
     public void verifyPriceRangeCategoryby() {
-        // test case to check if price are inside the described range($25-$50)
-        //reminder the result will be failed because it's bug from amazon side( already notify Yuliia about it)
-        webDriver.get("https://www.amazon.com");
-
-        WebElement category= webDriver.findElement(By.xpath("//a[@aria-label='Computers & Accessories']"));
-        category.click();
-
-        WebElement price= webDriver.findElement(By.xpath("//a/span[.='$25 to $50']"));
-        price.click();
-
-        By result = By.xpath("//a/span[@class='a-price']/span[@class='a-offscreen']");
-        List<WebElement> myElements = webDriver.findElements(result);
-        int check=0;
-        for(WebElement e : myElements) {
+        filterPrice.click();
+        boolean inRange=true;
+        for(WebElement e : productPriceList) {
             String num = e.getAttribute("innerHTML");
             double numprice=Double.parseDouble(num.replaceAll("[^0-9]", ""))/100;
             System.out.println(num+"=>"+numprice);
             if(numprice<25||numprice>50){
-                check++;
+                System.err.println(numprice+" out of range");
+                inRange=false;
+                break;
             }
         }
-        Assert.assertEquals( check,0);
+        Assert.assertTrue(inRange);
     }
 
-    @Test
+    @Test(description = "test case to check if price are sorted in a described setting(High to Low) in this case"+
+    "reminder the result will be failed because it's bug from amazon side")
     public void verifySorting() {
-        // test case to check if price are sorted in a described setting(High to Low) in this case
-        //reminder the result will be failed because it's bug from amazon side
-        webDriver.get("https://www.amazon.com");
-
-        WebElement category= webDriver.findElement(By.xpath("//a[@aria-label='Computers & Accessories']"));
-        category.click();
-
-        WebElement price= webDriver.findElement(By.xpath("//a/span[.='$25 to $50']"));
-        price.click();
+        filterPrice.click();
         //sorting feature only available after at least 1 category clicked- in this case price range category is choosen
-
-        WebElement featured= webDriver.findElement(By.xpath("//span/span[.='Featured']"));
-        featured.click();
         //click featured to show the dropdown
+        sortFeatured.click();
 
-        WebElement sortPrice= webDriver.findElement(By.xpath("//li[@aria-labelledby='s-result-sort-select_2']/a[.='Price: High to Low']"));
-        sortPrice.click();
+        //click the chosen sort mode
+        sortHighToLow.click();
 
-        By result = By.xpath("//a/span[@class='a-price']/span[@class='a-offscreen']");
-        List<WebElement> myElements = webDriver.findElements(result);
         List<Double> priceList = new ArrayList<>();
-        for(WebElement e : myElements) {
+        for(WebElement e : productPriceList) {
             String num = e.getAttribute("innerHTML");
             double numprice=Double.parseDouble(num.replaceAll("[^0-9]", ""))/100;
             System.out.println(num+"=>"+numprice);
@@ -105,7 +108,7 @@ public class VerifyFilterSearchTest extends BaseWebDriverTest{
                 // less than 0 mean that  first value is less than the second  value
                 //which mean the sort high to low is incorrect
                 returnVal=false;
-                return returnVal;
+                break;
             }
         }
         return returnVal;
