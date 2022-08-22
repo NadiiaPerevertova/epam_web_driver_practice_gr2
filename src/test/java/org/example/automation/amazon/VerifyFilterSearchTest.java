@@ -25,8 +25,10 @@ public class VerifyFilterSearchTest extends BaseWebDriverTest{
 
     @FindBy(xpath = "//div[@class='a-section a-spacing-none']/descendant::span[.='"+BRAND_ROKU+"']")
     private WebElement filterBrandRoku;
+    
     @FindBy(xpath = "//a/span[.='$25 to $50']")
     private WebElement filterPrice;
+    
     @FindAll({@FindBy(xpath = "//div[@class='s-main-slot s-result-list s-search-results sg-row']/descendant::span[@class='a-size-base-plus a-color-base a-text-normal']")})
     public List<WebElement> productTitleList;
 
@@ -43,7 +45,6 @@ public class VerifyFilterSearchTest extends BaseWebDriverTest{
     public void setup() {
         PageFactory.initElements(webDriver, this);
         webDriver.get(WEB_ADDRESS);
-
         filterCategory.click();
     }
 
@@ -69,7 +70,6 @@ public class VerifyFilterSearchTest extends BaseWebDriverTest{
         for(WebElement e : productTitleList) {
             System.out.println(e.getText());
             if (e.getText().contains(BRAND_APPLE)||e.getText().contains(BRAND_ROKU)){
-
             } else{
                 check=false;
                 break;
@@ -99,11 +99,10 @@ public class VerifyFilterSearchTest extends BaseWebDriverTest{
     @Test(description = "positive test case to check if price are sorted in a described setting(High to Low) in this case"+
     "reminder the result will be failed because it's bug from amazon side")
     public void verifySorting() {
-        filterPrice.click();
+        filterPrice.click();        
         //sorting feature only available after at least 1 category clicked- in this case price range category is choosen
         //click featured to show the dropdown
         sortFeatured.click();
-
         //click the chosen sort mode
         sortHighToLow.click();
 
