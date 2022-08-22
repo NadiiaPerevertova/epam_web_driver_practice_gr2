@@ -54,7 +54,6 @@ public class VerifyFilterSearchTest extends BaseWebDriverTest{
         filterBrand.click();
         int check=0;
         for(WebElement e : productTitleList) {
-            System.out.println(e.getText());
             if (!e.getText().contains(BRAND_APPLE)){
                check++;
             }
@@ -68,7 +67,6 @@ public class VerifyFilterSearchTest extends BaseWebDriverTest{
         filterBrandRoku.click();
         boolean check= true;
         for(WebElement e : productTitleList) {
-            System.out.println(e.getText());
             if (e.getText().contains(BRAND_APPLE)||e.getText().contains(BRAND_ROKU)){
             } else{
                 check=false;
@@ -86,7 +84,6 @@ public class VerifyFilterSearchTest extends BaseWebDriverTest{
         for(WebElement e : productPriceList) {
             String num = e.getAttribute("innerHTML");
             double numprice=Double.parseDouble(num.replaceAll("[^0-9]", ""))/100;
-            System.out.println(num+"=>"+numprice);
             if(numprice<25||numprice>50){
                 System.err.println(numprice+" out of range");
                 inRange=false;
@@ -110,7 +107,6 @@ public class VerifyFilterSearchTest extends BaseWebDriverTest{
         for(WebElement e : productPriceList) {
             String num = e.getAttribute("innerHTML");
             double numprice=Double.parseDouble(num.replaceAll("[^0-9]", ""))/100;
-            System.out.println(num+"=>"+numprice);
             priceList.add(numprice);
         }
         boolean checkSort=isSorted(priceList,priceList.size());
