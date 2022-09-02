@@ -32,7 +32,7 @@ public class HomePage {
     }
 
     public SearchResultsPage chooseShopbyCategory(String category) {
-        SelenideElement shopCategory = $(By.xpath("//a[@aria-label='"+category+"']")).shouldBe(Condition.visible);
+        SelenideElement shopCategory = $(By.xpath("//a[@aria-label='" + category + "']")).shouldBe(Condition.visible);
         shopCategory.click();
         return new SearchResultsPage();
     }
