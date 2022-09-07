@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
-public class SearchFieldTest extends BaseWebDriverTest {
+class VerifySearchFieldTest extends BaseWebDriverTest {
     public static final String INCORRECT_INPUT = "890770hhbhb767879zdrjh444:::";
     public static final String PRESENT = "ipad";
     public static final String TEXT = "iPad";

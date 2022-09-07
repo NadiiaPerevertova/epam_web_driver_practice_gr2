@@ -30,4 +30,16 @@ public class HomePage {
         chooseChairs.click();
         return new SearchResultsPage();
     }
+
+    public SearchResultsPage inputTextAndClickSearchButton(String searchText) {
+
+        SelenideElement searchInputField = $(By.cssSelector(".nav-search-field input")).shouldBe(Condition.visible);
+        searchInputField.sendKeys(searchText);
+
+        SelenideElement searchButton = $(By.xpath("//input[@id=\"nav-search-submit-button\"]")).shouldBe(Condition.visible);
+        searchButton.click();
+
+        return new SearchResultsPage();
+    }
+
 }
